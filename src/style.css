@@ -9,3 +9,76 @@ body {
    height: 100%;
    width: 100%;
 }
+
+.container {
+	margin: 0 auto;
+	padding-bottom: 30px;
+}
+.paragraph {
+    color: white; 
+	text-align: justify;
+}
+.title {
+    color: white; 
+	text-align: center;
+}
+.iconImage {
+	background: black; 
+	background-image: url("charismaticFace.png");
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	margin: 0 auto;
+	border-radius: 50%;
+    border: solid 1px #88001B;
+    
+    height: 3em; 
+    width: 3em;
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: 100%;
+    }  
+    .paragraph {
+    	font-size: 1.2em;
+    }
+    .title {
+    	font-size: 3em; 
+    }
+    .iconImage {
+    	height: 8em; 
+		width: 8em; 
+    }
+};
+
+@media (min-width: 600px) { 
+    .container {
+        width: 75%;
+    } 
+    .paragraph {
+    	font-size: 1em; 
+    }
+    .title {
+    	font-size: 2em; 
+    }
+    .iconImage{
+    	height: 5em; 
+		width: 5em;
+    }
+};
+@media (min-width: 1000px) { 
+    .container {
+        width: 50%; 
+    }
+    .paragraph {
+    	font-size: 0.5em; 
+    }
+    .title {
+    	font-size: 1em; 
+    }
+    .iconImage {
+    	height: 3em; 
+		width: 3em;
+    }
+}
