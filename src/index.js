@@ -1,11 +1,11 @@
-const createPath = (s, i) => {
+function createPath(s, i, openness){
     
-    const scaleX = d3.scaleLinear()
-    const scaleY = d3.scaleLinear()
+    const scaleX = d3.scaleLinear();
+    const scaleY = d3.scaleLinear();
                      
     const line =  d3.line()
-        .x((d) => d.x )
-        .y((d) => d.y)
+        .x((d) => d.x)
+        .y((d) => d.y*openness)
         .curve(d3.curveBasis)
 
     const points = [];
@@ -16,58 +16,111 @@ const createPath = (s, i) => {
     
 }
 
-const defineMaxY = (drawing) => {
+function updateData(eyesOpenness){
+    const biggerEyeY = Math.max(rightEye.maxY, leftEye.maxY);
+
+    rightEye.startX = 0;
+    rightEye.startY = determineStartY(biggerEyeY, rightEye.maxY, eyesOpenness);
+
+    leftEye.id      = "#leftEye";
+    leftEye.startX  = 255 + eyesDistance;
+    leftEye.startY  = determineStartY(biggerEyeY, leftEye.maxY, eyesOpenness);
+
+    mouth.startX    = 255/2;
+    mouth.startY    = biggerEyeY+mouthDistance;
+}
+
+function draw(data, openness) {
+    const d = d3.select(data.id)
+                .attr("transform", `translate(${data.startX}, ${data.startY})`)
+                .selectAll("path")
+                .data(data.drawing)
+    /*
+        Essa separação é necessária pois com o enter() apenas novos dados serão modificados em um update
+    */
+    d   .enter()
+        .append("path")
+        .attr("d", (d, i) =>createPath(d, i, openness));
+    
+    d   .attr("d", (d, i) =>createPath(d, i, openness));
+}
+
+function defineMaxY(drawing) {
     const yPoints = drawing.reduce( (a,b)=>[...a, ...b[1]], []);
     return Math.max(...yPoints);
 }
 
-const getRandom = (data) => {
+function createRandomDrawingData(data, id){
     let n = Math.floor( Math.random()*data.length );
     const out = data[n];
+
+    out.id = id;
     out.maxY = defineMaxY(out.drawing);
+
     return out;
 }
+
+function determineStartY(biggerEyeY, maxY, eyesOpenness){
+    const centralization    =   (biggerEyeY-maxY)/2;
+    const relOpenness       =   maxY*(1-eyesOpenness)/2;
+
+    return centralization + relOpenness;
+}
+
+function blinkUp(){
+    updateData(eyesOpenness);
+
+    draw(rightEye, eyesOpenness);
+    draw(leftEye, eyesOpenness);
+    draw(mouth, 1);
+
+    eyesOpenness += .1;
+    window.setTimeout(()=>{
+        if(eyesOpenness<1) blinkUp();
+        else {
+            window.setTimeout(()=>{
+                blinkDown();
+            },Math.random()*3750+750)
+        }
+    },10)
+}
+
+function blinkDown(){
+    updateData(eyesOpenness);
+
+    draw(rightEye, eyesOpenness);
+    draw(leftEye, eyesOpenness);
+    draw(mouth, 1);
+
+    window.setTimeout(()=>{
+        eyesOpenness -= .1;
+        if(eyesOpenness>0) blinkDown();
+        else               blinkUp();
+    },10)
+}
+
+/*
+    Valores de inicialização
+*/
 
 const mouthDistance = 5;
 const eyesDistance  = 5;
 
-let rightEye = getRandom(eyes);
-let leftEye = getRandom(eyes);
-let mouth = getRandom(mouths);
+const rightEye        = createRandomDrawingData(eyes, "#rightEye");
+const leftEye         = createRandomDrawingData(eyes, "#leftEye");
+const mouth           = createRandomDrawingData(mouths, "#mouth");
 
 const biggerEyeY = Math.max(rightEye.maxY, leftEye.maxY);
 
 const viewBox = `0 0 ${255*2+eyesDistance} ${biggerEyeY+mouth.maxY+mouthDistance}`;
 
-const rightCentralization = (biggerEyeY-rightEye.maxY)/2;
-const leftCentralization  = (biggerEyeY-leftEye.maxY)/2;
-
-const rightStartY = rightCentralization;// + rightOpenness;
-const leftStartY  = leftCentralization;// + leftOpenness;
-
 d3  .select("svg")
     .attr("viewBox", viewBox);
 
-d3  .select("#rightEye")
-    .attr("transform", `translate(0, ${rightStartY})`)
-    .selectAll("path")
-    .data(rightEye.drawing)
-    .enter()
-    .append("path")
-    .attr("d", (d, i) =>createPath(d, i));
 
-d3  .select("#leftEye")
-    .attr("transform", `translate(${255+eyesDistance}, ${leftStartY})`)
-    .selectAll("path")
-    .data(leftEye.drawing)
-    .enter()
-    .append("path")
-    .attr("d", (d, i) =>createPath(d, i));
+/*
+    Update
+*/
+let eyesOpenness = 1;
 
-d3  .select("#mouth")
-    .attr("transform", `translate(${255/2},${biggerEyeY+mouthDistance})`)
-    .selectAll("path")
-    .data(mouth.drawing)
-    .enter()
-    .append("path")
-    .attr("d", (d, i) =>createPath(d, i));
+blinkDown();

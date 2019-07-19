@@ -2,33 +2,34 @@
 <html>
     <head>
         <script src="https://d3js.org/d3.v5.js"></script>
+        <link rel="stylesheet" type="text/css" href="src/style.css">    
     </head>
     <body>
-        <ul></ul>
-        <svg style="height: 100%; width: 100%">
-            <g 
-                id="leftEye" 
-                stroke="black" 
-                fill="none" 
-                strokeWidth="2"
-            > 
-            </g>
-            <g 
-                id="rightEye" 
-                stroke="black" 
-                fill="none" 
-                strokeWidth="2"
-            > 
-            </g>
-            <g 
-                id="mouth" 
-                stroke="black" 
-                fill="none" 
-                strokeWidth="2"
-            > 
-            </g>
-        </svg>
-
+        <div style="width: 30%">
+            <svg>
+                <g
+                    id="leftEye" 
+                    stroke="white" 
+                    fill="none" 
+                    strokeWidth="2"
+                >
+                </g>
+                <g 
+                    id="rightEye" 
+                    stroke="white" 
+                    fill="none" 
+                    strokeWidth="2"
+                > 
+                </g>
+                <g 
+                    id="mouth" 
+                    stroke="white" 
+                    fill="none" 
+                    strokeWidth="2"
+                > 
+                </g>
+            </svg>
+        </div>
         <script type="text/javascript" src="data/eyes.json"></script>
         <script type="text/javascript" src="data/mouths.json"></script>
         <script type="text/javascript" src="src/index.js"></script>
