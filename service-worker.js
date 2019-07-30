@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/charismatic-faces/precache-manifest.2b11637de94fd134d1f5e0d7a864adb1.js"
+  "/charismatic-faces/precache-manifest.c2c9f58c04cb8d59bff0e6146dfcad7c.js"
 );
 
 self.addEventListener('message', (event) => {
