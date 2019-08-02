@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "b0dbc982950b523f5edd41fbfb0eeed9",
+    "revision": "58def910ff4e12dc073590d6e5dd5e47",
     "url": "/charismatic-faces/index.html"
   },
   {
